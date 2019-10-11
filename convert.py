@@ -13,6 +13,18 @@ source_csv_path = sys.argv[2]
 # arg 3 is output path
 output_path = sys.argv[3]
 
+# TODO: grab dataset info
+dataset = {
+    'id': '',
+    'name': '',
+    'description': '',
+    'license': '',
+    'source': '',
+    'uri': '',
+    'size': '',
+    'digest': ''
+}
+
 # parse input mapping
 columns = []
 with open(input_mapping_path, newline='') as csvfile:
@@ -21,15 +33,15 @@ with open(input_mapping_path, newline='') as csvfile:
         entry = {
             'name': row[0],
             'type': row[1],
-            'map' : ast.literal_eval(row[2]),
+            'map': ast.literal_eval(row[2]),
             'description': row[3]
         }
         columns.append(entry)
 
 # render using template
-env = Environment(loader = FileSystemLoader('./templates'), trim_blocks=True, lstrip_blocks=True)
+env = Environment(loader=FileSystemLoader('./templates'), trim_blocks=True, lstrip_blocks=True)
 template = env.get_template('template.j2')
-json_output = template.render(columns=columns)
+json_output = template.render(columns=columns, dataset=dataset)
 
 # open the input data
 remapped_data = []
@@ -39,7 +51,7 @@ with open(source_csv_path, newline='') as csvfile:
     next(reader, None)
 
     # append the new header names
-    remapped_data.append([column['name'] for column in columns ])
+    remapped_data.append([column['name'] for column in columns])
 
     # for each element in a given row, check to see if it needs to have its value remapped
     for row in reader:

@@ -1,16 +1,16 @@
 {
     "about": {
-        "datasetID": "",
-        "datasetName": "",
-        "description": "",
-        "license": "",
-        "source": "",
-        "sourceURI": "",
-        "approximateSize": "",
+        "datasetID": {{ dataset.id | tojson }},
+        "datasetName": {{ dataset.name | tojson }},
+        "description": {{ dataset.description | tojson }},
+        "license": {{ dataset.license | tojson }},
+        "source": {{ dataset.source | tojson }},
+        "sourceURI": {{ dataset.uri  | tojson }},
+        "approximateSize": {{ dataset.size  | tojson }},
         "datasetSchemaVersion": "3.3.1",
         "redacted": false,
         "datasetVersion": "1.0",
-        "digest": ""
+        "digest": {{ dataset.digest | tojson }}
     },
     "dataResources": [
         {
