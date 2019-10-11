@@ -1,0 +1,47 @@
+{
+    "about": {
+        "datasetID": "",
+        "datasetName": "",
+        "description": "",
+        "license": "",
+        "source": "",
+        "sourceURI": "",
+        "approximateSize": "",
+        "datasetSchemaVersion": "3.3.1",
+        "redacted": false,
+        "datasetVersion": "1.0",
+        "digest": ""
+    },
+    "dataResources": [
+        {
+            "resID": "learningData",
+            "resPath": "tables/learningData.csv",
+            "resType": "table",
+            "resFormat": [
+                "text/csv"
+            ],
+            "isCollection": false,
+            "columns": [
+                {
+                    "colIndex": 0,
+                    "colName": "d3mIndex",
+                    "colType": "integer",
+                    "role": [
+                        "index"
+                    ]
+                },
+                {% for column in columns %}
+                {
+                    "colIndex": {{ loop.index | tojson }},
+                    "colName": {{ column.name | tojson }},
+                    "colType": {{ column.type | tojson }},
+                    "colDescription": {{column.description | tojson}},
+                    "role": [
+                        "attribute"
+                    ]
+                },
+                {% endfor %}
+            ]
+        }
+    ]
+}
