@@ -47,15 +47,15 @@ json_output = template.render(columns=columns, dataset=dataset)
 remapped_data = []
 with open(source_csv_path, newline='') as csvfile:
     reader = csv.reader(csvfile, delimiter='\t')
-    #skip header
+    # skip header
     next(reader, None)
 
     # append the new header names
-    remapped_data.append([column['name'] for column in columns])
+    remapped_data.append(['d3mIndex'] + [column['name'] for column in columns])
 
-    # for each element in a given row, check to see if it needs to have its value remapped
-    for row in reader:
-        remapped_row = []
+    # for each element in a given row, add a d3m index and check to see if it needs to have its value remapped
+    for row_num, row in enumerate(reader):
+        remapped_row = [row_num]
         for col_idx, col_value in enumerate(row):
             col_map = columns[col_idx]['map']
             value = col_value
@@ -75,7 +75,7 @@ with open(dataset_doc_path, 'w', newline='') as dataset_doc_file:
     dataset_doc_file.write(json_output)
 
 # write out the remapped csv file
-learning_data_path = os.path.join(tables_path, 'learning_data.csv')
+learning_data_path = os.path.join(tables_path, 'learningData.csv')
 with open(learning_data_path, 'w', newline='') as learning_data_file:
     learning_data_writer = csv.writer(learning_data_file, quoting=csv.QUOTE_MINIMAL)
     learning_data_writer.writerows(remapped_data)
