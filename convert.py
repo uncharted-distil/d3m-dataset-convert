@@ -70,7 +70,7 @@ if not os.path.exists(tables_path):
     os.makedirs(tables_path)
 
 # write out the dataset doc
-dataset_doc_path = os.path.join(output_path, 'datsetDoc.json')
+dataset_doc_path = os.path.join(output_path, 'datasetDoc.json')
 with open(dataset_doc_path, 'w', newline='') as dataset_doc_file:
     dataset_doc_file.write(json_output)
 
