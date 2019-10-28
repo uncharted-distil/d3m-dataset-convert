@@ -3,31 +3,27 @@ import csv
 import sys
 import ast
 import os
+import json
 
-# arg 1 is path input mapping csv file
-input_mapping_path = sys.argv[1]
+# arg 1 is path it input mapping csv
+mapping_path = sys.argv[1]
+
+# arg 2 path to about data
+about_path = sys.argv[2]
 
 # arg 2 is path to csv file to transform
-source_csv_path = sys.argv[2]
+source_csv_path = sys.argv[3]
 
 # arg 3 is output path
-output_path = sys.argv[3]
+output_path = sys.argv[4]
 
-# TODO: grab dataset info
-dataset = {
-    'id': '',
-    'name': '',
-    'description': '',
-    'license': '',
-    'source': '',
-    'uri': '',
-    'size': '',
-    'digest': ''
-}
+# load the dataset about info
+with open(about_path) as about_file:
+    about_data = json.load(about_file)
 
 # parse input mapping
 columns = []
-with open(input_mapping_path, newline='') as csvfile:
+with open(mapping_path, newline='') as csvfile:
     reader = csv.reader(csvfile)
     for row in reader:
         entry = {
@@ -41,7 +37,7 @@ with open(input_mapping_path, newline='') as csvfile:
 # render using template
 env = Environment(loader=FileSystemLoader('./templates'), trim_blocks=True, lstrip_blocks=True)
 template = env.get_template('template.j2')
-json_output = template.render(columns=columns, dataset=dataset)
+json_output = template.render(columns=columns, about=about_data)
 
 # open the input data
 remapped_data = []
