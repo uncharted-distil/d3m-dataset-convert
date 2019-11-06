@@ -56,19 +56,21 @@ with open(source_csv_path, newline='') as csvfile:
     # for each element in a given row, add a d3m index and check to see if it needs to have its value remapped
     for row_num, row in enumerate(reader):
         remapped_row = [row_num]
-        col_idx = 0
-        for col_value in row:
+        out_idx = 0
+        for col_idx, col_value in enumerate(row):
+            # skip removed columns
             if col_idx in removed:
                 continue
 
-            col_map = columns[col_idx]['map']
-            col_idx += 1
+            col_map = columns[out_idx]['map']
+            out_idx += 1
 
             value = col_value
             if len(col_map) > 0 and col_value in col_map:
                 value = col_map[col_value]
             remapped_row.append(value)
         remapped_data.append(remapped_row)
+
 
 # create the output dir
 tables_path = os.path.join(output_path, 'tables')
