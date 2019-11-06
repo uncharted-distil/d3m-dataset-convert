@@ -23,16 +23,20 @@ with open(about_path) as about_file:
 
 # parse input mapping
 columns = []
+removed = set()
 with open(mapping_path, newline='') as csvfile:
     reader = csv.reader(csvfile)
-    for row in reader:
-        entry = {
-            'name': row[0],
-            'type': row[1],
-            'map': ast.literal_eval(row[2]),
-            'description': row[3]
-        }
-        columns.append(entry)
+    for row_idx, row in enumerate(reader):
+        if len(row) > 1:
+            entry = {
+                'name': row[0],
+                'type': row[1],
+                'map': ast.literal_eval(row[2]),
+                'description': row[3]
+            }
+            columns.append(entry)
+        else:
+            removed.add(row_idx)
 
 # render using template
 env = Environment(loader=FileSystemLoader('./templates'), trim_blocks=True, lstrip_blocks=True)
@@ -52,8 +56,14 @@ with open(source_csv_path, newline='') as csvfile:
     # for each element in a given row, add a d3m index and check to see if it needs to have its value remapped
     for row_num, row in enumerate(reader):
         remapped_row = [row_num]
-        for col_idx, col_value in enumerate(row):
+        col_idx = 0
+        for col_value in row:
+            if col_idx in removed:
+                continue
+
             col_map = columns[col_idx]['map']
+            col_idx += 1
+
             value = col_value
             if len(col_map) > 0 and col_value in col_map:
                 value = col_map[col_value]
